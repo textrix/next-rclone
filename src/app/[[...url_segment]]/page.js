@@ -20,7 +20,7 @@ export default async function Home(req) {
 
     return (
       <div>
-        <h1>Catch-All Route at Root</h1>
+        <h1>Root</h1>
         <p>Path Parameters: {JSON.stringify(remote_list)}</p>
 
         <ul>
