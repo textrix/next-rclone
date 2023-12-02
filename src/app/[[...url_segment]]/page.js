@@ -70,18 +70,14 @@ export default async function Home(req) {
         </ul>*/}
 
         <ul>
-          {dir_list.list.map((item) => {
-            if (item.IsDir) {
+          {dir_list.list.filter(item => item.IsDir).map((item) => {
               return <li>[<Link href={'/' + full_dir + '/' + item.Name}>{item.Name}/</Link>]</li>
-            }
           })}
         </ul>
 
         <ul>
-          {dir_list.list.map((item) => {
-            if (!item.IsDir) {
+          {dir_list.list.filter(item => !item.IsDir).map((item) => {
               return <li>{prettyBytes(item.Size, { maximumFractionDigits: 2 })} {item.Name}</li>
-            }
           })}
         </ul>
       </div>
