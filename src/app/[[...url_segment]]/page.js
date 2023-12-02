@@ -25,7 +25,7 @@ export default async function Home(req) {
 
         <ul>
           {remote_list.remotes.map((item, index) => {
-            return <li key={index}><Link href={`/${item}`}>{item}</Link></li>
+            return <li key={index}><Link href={`/${item}`}>&lt;{item}&gt;</Link></li>
           })}
         </ul>
       </div>
@@ -68,7 +68,7 @@ export default async function Home(req) {
         <ul>
           {dir_list.list.map((item) => {
             if (!item.IsDir) {
-              return <li>{prettyBytes(item.Size,{minimumFractionDigits: 0})} {item.Name}</li>
+              return <li>{prettyBytes(item.Size,{maximumFractionDigits: 2})} {item.Name}</li>
             }
           })}
         </ul>
