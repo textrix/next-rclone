@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { NextRequest, NextResponse } from 'next/server';
 import Link from 'next/link';
 import prettyBytes from 'pretty-bytes';
+import nextConfig from '../../../next.config';
 
 export default async function Home(req) {
   console.log(JSON.stringify(req));
@@ -11,7 +12,7 @@ export default async function Home(req) {
   console.log(level);
 
   if (0 == level) { // root
-    const resp = await fetch(process.env.RCD_URL + '/config/listremotes', {
+    const resp = await fetch(nextConfig.env.RCD_URL + '/config/listremotes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: '{}'
@@ -38,7 +39,7 @@ export default async function Home(req) {
     const cur_dir = url_segment.slice(1).join('/');
     const up_dir = url_segment.slice(0, -1).join('/');
 
-    const resp = await fetch(process.env.RCD_URL + '/operations/list', {
+    const resp = await fetch(nextConfig.env.RCD_URL + '/operations/list', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fs: _fs, remote: cur_dir })
