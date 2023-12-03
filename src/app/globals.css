@@ -1,0 +1,20 @@
+html {
+    font-family: var(--font-nanum-gothic-coding);
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: red;
+}
+
+a:visited {
+    color: black;
+}
+
+a:visited:hover {
+    color: red;
+}

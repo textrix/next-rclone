@@ -5,11 +5,7 @@ import prettyBytes from 'pretty-bytes';
 import nextConfig from '../../../next.config';
 
 export default async function Home(req) {
-  console.log(JSON.stringify(req));
-  console.log(req);
-
   const level = Object.keys(req.params).length == 0 ? 0 : req.params.url_segment.length;
-  console.log(level);
 
   if (0 == level) { // root
     const resp = await fetch(nextConfig.env.RCD_URL + '/config/listremotes', {
@@ -19,14 +15,42 @@ export default async function Home(req) {
     });
     const remote_list = await resp.json();
 
+    let remote_about = [];
+
+    try {
+        const fetchPromises = remote_list.remotes.map(async item => {
+          const url = nextConfig.env.RCD_URL + `/operations/about?fs=${item}:`;
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: '{}'});
+          if (!response.ok) {
+            throw new Error("failed");
+          }
+          return response.json();
+        });
+
+        const results = await Promise.all(fetchPromises);
+
+        remote_about = remote_list.remotes.map((remote, index) => {
+          return { remote: remote, about: results[index] };
+        });
+      }
+    catch (error) {
+      console.log(error);
+    }
+
     return (
       <div>
         <h1>Root</h1>
-        <p>Path Parameters: {JSON.stringify(remote_list)}</p>
 
         <ul>
-          {remote_list.remotes.map((item, index) => {
-            return <li key={index}><Link href={`/${item}`}>&lt;{item}&gt;</Link></li>
+          {remote_about.map((item, index) => {
+            return <li key={index}><Link href={`/${item.remote}`}>&lt;{item.remote}&gt;<span> / </span>
+              {prettyBytes(item.about.free, { space:false, maximumFractionDigits: 2 })}<span> / </span>
+              {prettyBytes(item.about.used, { space:false, maximumFractionDigits: 2 })}<span> / </span>
+              {prettyBytes(item.about.total, { space:false, maximumFractionDigits: 2 })}<span> / </span>
+              {prettyBytes(item.about.trashed, { space:false, maximumFractionDigits: 2 })}</Link></li>
           })}
         </ul>
       </div>
@@ -45,40 +69,30 @@ export default async function Home(req) {
       body: JSON.stringify({ fs: _fs, remote: cur_dir })
     });
     const dir_list = await resp.json();
-    //console.log(dir_list);
-    console.log(full_dir);
-    console.log(cur_dir);
-    console.log(up_dir);
 
     return (
       <div>
-        {/* <h1>Dir: {full_dir}</h1> */}
-
         <h1>
-          {<span><Link href='/'>Root</Link> / </span>}
+          {<span key='0'><Link href='/'>Root</Link> / </span>}
           {url_segment.map((item, index) => {
             const cur_link = url_segment.slice(0, index + 1).join('/') + ' ';
             if (url_segment.length - 1 != index) {
-              return <span><Link href={'/' + cur_link}>{item}</Link> / </span>;
+              return <span key={index}><Link href={'/' + cur_link}>{item}</Link> / </span>;
             } else {
-              return <span>{item}</span>;
+              return <span key={index}>{item}</span>;
             }
           })}
         </h1>
 
-        {/*<ul>
-          <li><Link href={'/'+up_dir}>Up</Link></li>
-        </ul>*/}
-
-        <ul>
-          {dir_list.list.filter(item => item.IsDir).map((item) => {
-              return <li>[<Link href={'/' + full_dir + '/' + item.Name}>{item.Name}/</Link>]</li>
+        <ul key='directory list'>
+          {dir_list.list.filter(item => item.IsDir).map((item, index) => {
+              return <li key={index}>[<Link href={'/' + full_dir + '/' + item.Name}>{item.Name}/</Link>]</li>
           })}
         </ul>
 
-        <ul>
-          {dir_list.list.filter(item => !item.IsDir).map((item) => {
-              return <li>{prettyBytes(item.Size, { maximumFractionDigits: 2 })} {item.Name}</li>
+        <ul key='file list'>
+          {dir_list.list.filter(item => !item.IsDir).map((item, index) => {
+              return <li key={index}>{prettyBytes(item.Size, { maximumFractionDigits: 2 })} {item.Name}</li>
           })}
         </ul>
       </div>
