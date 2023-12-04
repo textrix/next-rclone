@@ -1,34 +1,42 @@
 import Image from 'next/image'
-import { NextRequest, NextResponse } from 'next/server';
-import Link from 'next/link';
-import prettyBytes from 'pretty-bytes';
-import * as rclone from '@/utils/rclone';
+import { NextRequest, NextResponse } from 'next/server'
+import Link from 'next/link'
+import prettyBytes from 'pretty-bytes'
+import * as rclone from '@/utils/rclone'
+import SignButton from '@/components/SignButton'
 
 export default function CatchAll(req) {
-    const { params } = req;
-    const { url_segment } = params;
-    const level = (!url_segment || params.length == 0) ? 0 : params.length;
+    const { params } = req
+    const { url_segment } = params
+    const level = (!url_segment || params.length == 0) ? 0 : params.length
 
-    return (0 == level) ? is_root() : is_not_root(url_segment);
+    return (0 == level) ? is_root() : is_not_root(url_segment)
 }
 
 async function is_root() {
     const remote_list = await rclone.config_listremotes();
-
-    let remote_about = [];
 
     const fetchPromises = remote_list.remotes.map(async item => {
         return await rclone.op_about(item);
     });
     const results = await Promise.all(fetchPromises);
 
-    remote_about = remote_list.remotes.map((remote, index) => {
+    const remote_about = remote_list.remotes.map((remote, index) => {
         return { remote: remote, about: results[index] };
     });
-
+    
+    // logout icon https://fontawesome.com/icons/right-from-bracket?f=classic&s=solid
     return (
         <div>
-            <h1>Root/</h1>
+            <div className="flex justify-between">
+                <div className="flex flex-col justify-center">
+                    <h1 className="text-3xl align-middle">
+                        <Link href='/'>Root/</Link>
+                    </h1>
+                </div>
+                <div></div>
+                <div><SignButton /></div>
+            </div>
 
             <ul>
                 {remote_about.map((item, index) => {
@@ -52,19 +60,25 @@ async function is_not_root(url_segment) {
     const up_dir = segment.slice(0, -1).join('/');
 
     const dir_list = await rclone.op_list(fs, cur_dir);
-    const dir_style = {paddingRight: '0.5em'};
+    const dir_style = { paddingRight: '0.5em' };
 
     return (
         <div>
-            <h1>
-                {<span key='0' style={dir_style}><Link href='/'>Root/</Link></span>}
-                {segment.map((item, index) => {
-                    const cur_link = segment.slice(0, index + 1).join('/') + ' ';
-                    //const slash = segment.length - 1 != index ? '/' : '';
-                    const slash = 0 != index ? '/' : ':';
-                    return <span key={index+1} style={dir_style}><Link href={'/' + cur_link}>{item}{slash}</Link></span>;
-                })}
-            </h1>
+            <div className="flex justify-between">
+                <div className="flex flex-col justify-center">
+                    <h1 className="text-3xl align-middle">
+                        {<span key='0' style={dir_style}><Link href='/'>Root/</Link></span>}
+                        {segment.map((item, index) => {
+                            const cur_link = segment.slice(0, index + 1).join('/') + ' ';
+                            //const slash = segment.length - 1 != index ? '/' : '';
+                            const slash = 0 != index ? '/' : ':';
+                            return <span key={index + 1} style={dir_style}><Link href={'/' + cur_link}>{item}{slash}</Link></span>;
+                        })}
+                    </h1>
+                </div>
+                <div></div>
+                <div><SignButton /></div>
+            </div>
 
             <ul key='directory list'>
                 {dir_list.list.filter(item => item.IsDir).map((item, index) => {

@@ -18,3 +18,20 @@ a:visited {
 a:visited:hover {
     color: red;
 }
+
+.icon {
+    vertical-align: middle; /* SVG를 중앙에 맞춤 */
+}
+
+#header-left {
+    float: left;
+}
+
+#header-right {
+    float: right;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
