@@ -4,7 +4,7 @@ import Link from 'next/link';
 import prettyBytes from 'pretty-bytes';
 import * as rclone from '@/utils/rclone';
 
-export default async function CatchAll(req) {
+export default function CatchAll(req) {
     const { params } = req;
     const { url_segment } = params;
     const level = (!url_segment || params.length == 0) ? 0 : params.length;
@@ -17,23 +17,18 @@ async function is_root() {
 
     let remote_about = [];
 
-    try {
-        const fetchPromises = remote_list.remotes.map(async item => {
-            return await rclone.op_about(item);
-        });
-        const results = await Promise.all(fetchPromises);
+    const fetchPromises = remote_list.remotes.map(async item => {
+        return await rclone.op_about(item);
+    });
+    const results = await Promise.all(fetchPromises);
 
-        remote_about = remote_list.remotes.map((remote, index) => {
-            return { remote: remote, about: results[index] };
-        });
-    }
-    catch (error) {
-        console.log(error);
-    }
+    remote_about = remote_list.remotes.map((remote, index) => {
+        return { remote: remote, about: results[index] };
+    });
 
     return (
         <div>
-            <h1>Root</h1>
+            <h1>Root/</h1>
 
             <ul>
                 {remote_about.map((item, index) => {
@@ -57,15 +52,17 @@ async function is_not_root(url_segment) {
     const up_dir = segment.slice(0, -1).join('/');
 
     const dir_list = await rclone.op_list(fs, cur_dir);
+    const dir_style = {paddingRight: '0.5em'};
 
     return (
         <div>
             <h1>
-                {<span key='0'><Link href='/'>Root</Link> / </span>}
+                {<span key='0' style={dir_style}><Link href='/'>Root/</Link></span>}
                 {segment.map((item, index) => {
                     const cur_link = segment.slice(0, index + 1).join('/') + ' ';
-                    const slash = segment.length - 1 != index ? ' / ' : '';
-                    return <span key={index}><Link href={'/' + cur_link}>{item}</Link>{slash}</span>;
+                    //const slash = segment.length - 1 != index ? '/' : '';
+                    const slash = 0 != index ? '/' : ':';
+                    return <span key={index+1} style={dir_style}><Link href={'/' + cur_link}>{item}{slash}</Link></span>;
                 })}
             </h1>
 
