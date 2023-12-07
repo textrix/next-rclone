@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import { NextRequest, NextResponse } from 'next/server'
 import Link from 'next/link'
-import prettyBytes from 'pretty-bytes'
 import * as rclone from '@/utils/rclone'
+import * as b2s from '@/utils/byte2string'
 import SignButton from '@/components/SignButton'
 
 export default function CatchAll(req) {
@@ -40,11 +40,13 @@ async function is_root() {
 
             <ul>
                 {remote_about.map((item, index) => {
-                    return <li key={index}><Link href={`/${item.remote}`}>&lt;{item.remote}&gt;<span> / </span>
-                        {prettyBytes(item.about.free, { space: false, maximumFractionDigits: 2 })}<span> / </span>
-                        {prettyBytes(item.about.used, { space: false, maximumFractionDigits: 2 })}<span> / </span>
-                        {prettyBytes(item.about.total, { space: false, maximumFractionDigits: 2 })}<span> / </span>
-                        {prettyBytes(item.about.trashed, { space: false, maximumFractionDigits: 2 })}</Link></li>
+                    return (
+                        <li key={index}><Link href={`/${item.remote}`}>&lt;{item.remote}&gt;<span> / </span>
+                        <pre>{b2s.byte2string(item.about.used)} /  </pre>
+                        <pre>{b2s.byte2string(item.about.free)} /  </pre>
+                        <pre>{b2s.byte2string(item.about.total)} / </pre>
+                        <pre>{b2s.byte2string(item.about.trashed)} </pre></Link></li>
+                    )
                 })}
             </ul>
         </div>
@@ -88,7 +90,7 @@ async function is_not_root(url_segment) {
 
             <ul key='file list'>
                 {dir_list.list.filter(item => !item.IsDir).map((item, index) => {
-                    return <li key={index}>{prettyBytes(item.Size, { maximumFractionDigits: 2 })} {item.Name}</li>
+                    return <li key={index}>{b2s.byte2string(item.Size)} {item.Name}</li>
                 })}
             </ul>
         </div>
