@@ -1,10 +1,58 @@
+
 import nextConfig from '@/../next.config';
 
-export async function config_listremotes() {
-    const response = await fetch(nextConfig.env.RCD_URL + '/config/listremotes', {
+async function api_(path, body) {
+    try {
+        const response = await fetch(path, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        if (response.ok) {
+            const result = await response.json()
+            return [ result, null ]
+        }
+
+        const error_text = await response.text()
+        return [ null, error_text || `HTTP error! status: ${response.status}` ]
+    }
+    catch (error) {
+        return [ null, error.name + ' ' + error.message ]
+    }
+}
+
+export async function api(path, body) {
+    return await api_('/api/rclone/' + path, body)
+}
+
+export async function direct_api(path, body) {
+    return await api_(process.env.RCD_URL + '/' + path, body)
+}
+
+export async function api_old(path, body) {
+    const response = await fetch(process.env.NEXTAUTH_URL + '/api/rclone/' + path, {
         method: 'POST',
-        //headers: { 'Content-Type': 'application/json' },
-       // body: '{}'
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    return await response.json();
+}
+
+export async function direct_api_old(path, body) {
+    const response = await fetch(process.env.RCD_URL + '/' + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    return await response.json();
+}
+
+export async function config_listremotes() {
+    const response = await fetch(process.env.NEXTAUTH_URL+'/api/rclone/config/listremotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}'
     });
     const remote_list = await response.json();
     return remote_list;
