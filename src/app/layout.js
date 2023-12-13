@@ -18,7 +18,8 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en" className={`${nanum_gothic_coding.variable}`}>
             <body>
-                <Providers>{children}</Providers></body>
+                <Providers>{children}</Providers>
+            </body>
         </html>
     )
 }

@@ -1,11 +1,20 @@
 
 import nextConfig from '@/../next.config';
 
-async function api_(path, body) {
+async function api_(path, body, token = null) {
+    let headers = {
+        'Content-Type': 'application/json',
+    }
+
+    if (token) {
+        headers['Authorization'] = 'Bearer ' + token
+        console.log(headers)
+    }
+
     try {
         const response = await fetch(path, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: headers,
             body: JSON.stringify(body)
         })
 
@@ -18,12 +27,12 @@ async function api_(path, body) {
         return [ null, error_text || `HTTP error! status: ${response.status}` ]
     }
     catch (error) {
-        return [ null, error.name + ' ' + error.message ]
+        return [ null, error.name + ': ' + error.message ]
     }
 }
 
-export async function api(path, body) {
-    return await api_('/api/rclone/' + path, body)
+export async function api(path, body, token) {
+    return await api_('/api/rclone/' + path, body, token)
 }
 
 export async function direct_api(path, body) {
