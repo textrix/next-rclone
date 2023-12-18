@@ -11,9 +11,9 @@ export default async function CatchAll(context) {
 
     const session = await getServerSession()
     if (session && session.user) {
-        return (0 == level) ? (<IsRoot /> ) : <IsNotRoot params={url_segment} />
+        return (0 == level) ? (<IsRoot_client /> ) : <IsNotRoot params={url_segment} />
     }
     else {
-        redirect('/signIn')
+        redirect('/login')
     }
 }

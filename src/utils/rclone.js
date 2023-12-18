@@ -7,8 +7,8 @@ async function api_(path, body, token = null) {
     }
 
     if (token) {
-        headers['Authorization'] = 'Bearer ' + token
-        console.log(headers)
+        headers['Authorization'] = token // for client component, no 'Bearer'
+        //console.log(headers)
     }
 
     try {

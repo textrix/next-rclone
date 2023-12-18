@@ -9,7 +9,7 @@ export async function POST(request) {
         email: body.username,
       },
     })*/
-    const user = { name: 'admin', password: 'admin' }
+    const user = { name: process.env.ADMIN_USERNAME, password: process.env.ADMIN_PASSWORD }
   
     if (user && user.password == body.password) {/* && (await bcrypt.compare(body.password, user.password))) {
         const { password, ...userWithoutPass } = user;

@@ -41,14 +41,22 @@ const handler = NextAuth({
         }),
     ],
     pages: {
-        signIn: '/signIn',
+        signIn: '/login',
     },
+    /*session: {
+        strategy: "jwt", // default
+    },
+    jwt: {
+        secret: process.env.JWT_SECRET,
+        encryption: true,
+        maxAge: 24 * 60 * 60, // 1day
+    },*/
     callbacks: {
         async jwt({ token, user }) {
             return { ...token, ...user }
         },
         async session({ session, token }) {
-            session.user = token
+            session.user.accessToken = token.accessToken
             return session
         },
         jwt1({ token, trigger, session }) {
@@ -59,15 +67,11 @@ const handler = NextAuth({
             return { ...token, ...user }
         },
         // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
-        async session1({ session, trigger, newSession }) {
-            // Note, that `rest.session` can be any arbitrary object, remember to validate it!
-            if (trigger === "update" && newSession?.user) {
-                // You can update the session in the database if it's not already updated.
-                // await adapter.updateUser(session.user.id, { name: newSession.name })
+        session1({ session, token, user }) {
+            // Send properties to the client, like an access_token and user id from a provider.
+            session.accessToken = token.accessToken
+            session.user.id = token.id
 
-                // Make sure the updated value is reflected on the client
-                session.user = newSession.user
-            }
             return session
         }
     }

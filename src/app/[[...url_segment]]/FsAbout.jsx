@@ -13,7 +13,7 @@ export default function FsAbout({ params: fs }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (session && session.user) {
+            if (session && session.user && session.user.accessToken) {
                 const [rep, err] = await rclone.api('operations/about', { fs: fs + ':' }, session.user.accessToken)
 
                 if (err == null) {
