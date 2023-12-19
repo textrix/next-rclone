@@ -20,3 +20,25 @@ export function verifyJwt(token) {
         return null
     }
 }
+
+export function verifyToken(auth_value) {
+    if (auth_value) {
+        // When called externally: Checks the pre-issued API token with the value passed as 'Bearer'
+        if (auth_value.startsWith('Bearer ')) {
+            if (auth_value.replace('Bearer ', '') == process.env.API_TOKEN) {
+                return 200
+            }
+            else {
+                return 403 // Fobidden
+            }
+        }
+        // When called from a client component: Resolves to accessToken combined with session
+        else if (verifyJwt(auth_value)) {
+            return 200
+        }
+        else {
+            return 403
+        }
+    }
+    return 401
+}

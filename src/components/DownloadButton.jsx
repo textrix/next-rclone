@@ -1,19 +1,19 @@
-//
-export default function DownloadButton() {
+'use client'
+
+import { useSession } from "next-auth/react"
+import { useEffect } from "react"
+
+export default function DownloadButton({ path }) {
+    const { data: session, status, update } = useSession()
+
     const handleDownload = async () => {
-        const response = await fetch('/api/streamdownload')
-        const blob = await response.blob()
-
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = 'downloadedfile.txt'
-        document.body.appendChild(a)
-        a.click()
-
-        window.URL.revokeObjectURL(url)
-        document.body.removeChild(a)
+        if (session && session.user && session.user.accessToken) {
+            window.location.href = `${path}?token=${session.user.accessToken}`
+        }
     }
+
+    useEffect(() => {
+    }, [session])
 
     return (
         <button onClick={handleDownload}>File Download</button>
