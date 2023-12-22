@@ -13,7 +13,7 @@ export default async function IsRoot() {
         <div>
             <Header />
             {
-                remote_list.remotes.map(async (fs) => {
+                remote_list?.remotes.map(async (fs) => {
                     const [about, error] = await rclone.direct_api('operations/about', { fs: fs + ':' })
                     if (error) {
                         return <div>{error}</div>

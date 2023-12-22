@@ -20,13 +20,13 @@ export default async function IsNotRoot({ params: url_segment }) {
             <Header params={segment} />
 
             <ul key='directory list'>
-                {dir_list.list.filter(item => item.IsDir).map((item, index) => {
+                {dir_list?.list.filter(item => item.IsDir).map((item, index) => {
                     return <li key={index}>[<Link href={'/' + full_dir + '/' + item.Name}>{item.Name}/</Link>] {item.Size}</li>
                 })}
             </ul>
 
             <ul key='file list'>
-                {dir_list.list.filter(item => !item.IsDir).map((item, index) => {
+                {dir_list?.list.filter(item => !item.IsDir).map((item, index) => {
                     return <li key={index}>
                         {b2s.byte2string(item.Size)} {item.Name}
                         <DownloadButton path={`${process.env.NEXTAUTH_URL}/api/download/${client_dir}/${item.Name}`} />

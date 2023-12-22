@@ -1,6 +1,6 @@
 import { signJwtAccessToken } from '@/utils/jwt'
 import { NextRequest } from 'next/server'
- 
+
 export async function POST(request) {
     const body = await request.json()
 
@@ -10,7 +10,7 @@ export async function POST(request) {
       },
     })*/
     const user = { name: process.env.ADMIN_USERNAME, password: process.env.ADMIN_PASSWORD }
-  
+
     if (user && user.password == body.password) {/* && (await bcrypt.compare(body.password, user.password))) {
         const { password, ...userWithoutPass } = user;
 */
@@ -24,9 +24,8 @@ export async function POST(request) {
             accessToken,
         };
 
-
         return new Response(JSON.stringify(result))
     } else {
         return new Response(JSON.stringify(null))
-    } 
+    }
 }
