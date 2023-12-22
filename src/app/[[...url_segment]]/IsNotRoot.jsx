@@ -4,6 +4,7 @@ import * as rclone from '@/utils/rclone'
 import * as b2s from '@/utils/byte2string'
 import Header from './Header'
 import DownloadButton from '@/components/DownloadButton'
+import UploadButton from '@/components/UploadButton'
 
 export default async function IsNotRoot({ params: url_segment }) {
     const segment = url_segment.map(item => decodeURIComponent(item))
@@ -18,6 +19,8 @@ export default async function IsNotRoot({ params: url_segment }) {
     return (
         <div>
             <Header params={segment} />
+
+            <UploadButton />
 
             <ul key='directory list'>
                 {dir_list?.list.filter(item => item.IsDir).map((item, index) => {
