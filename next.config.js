@@ -16,4 +16,12 @@ const nextConfig = {
       },
 }
 
-module.exports = nextConfig
+module.exports = async (phase, { defaultConfig }) => {
+    const tmpDir = 'tmp/nrr';
+    const fs = require('fs')
+    fs.mkdir(`/${tmpDir}`, { recursive: true }, (err) => {
+        if (err) throw err
+    })
+
+    return nextConfig
+}

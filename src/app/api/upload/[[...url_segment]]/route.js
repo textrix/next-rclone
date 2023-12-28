@@ -9,10 +9,6 @@ const pump = promisify(pipeline);
 
 export async function POST(request) {
     const tmpDir = 'tmp/nrr';
-    mkdir(`/${tmpDir}`, { recursive: true }, (err) => {
-        if (err) throw err
-    })
-
     const movePromises = []
 
     const busboy = Busboy({
