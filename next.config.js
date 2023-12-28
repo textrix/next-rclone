@@ -2,8 +2,8 @@
 const nextConfig = {
     /*async rewrites() {
         return [{
-            source: '/api/rclone/:path*',
-            destination: process.env.RCD_URL + '/:path*',
+            source: '/api/upload/:path*',
+            destination: process.env.RCD_URL + '/operations/uploadfile/:path*',
         },];
     },*/
     env: {

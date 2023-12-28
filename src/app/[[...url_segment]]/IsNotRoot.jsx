@@ -20,7 +20,7 @@ export default async function IsNotRoot({ params: url_segment }) {
         <div>
             <Header params={segment} />
 
-            <UploadButton />
+            <UploadButton params={segment}/>
 
             <ul key='directory list'>
                 {dir_list?.list.filter(item => item.IsDir).map((item, index) => {

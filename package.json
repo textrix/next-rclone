@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "axios": "^1.6.2",
+    "busboy": "^1.6.0",
+    "fetch-request-body-to-stream": "^1.0.0",
     "formidable": "^3.5.1",
     "jsonwebtoken": "^9.0.2",
     "next": "14.0.3",
     "next-auth": "^4.24.5",
+    "next-http-proxy-middleware": "^1.2.6",
     "pretty-bytes": "^6.1.1",
     "react": "^18",
     "react-dom": "^18",
