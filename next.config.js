@@ -16,12 +16,19 @@ const nextConfig = {
       },
 }
 
+//import os from 'os'
+//import fs from 'fs'
+//const os = require('os')
+//const fs = require('fs')
+
 module.exports = async (phase, { defaultConfig }) => {
-    const tmpDir = 'tmp/nrr';
-    const fs = require('fs')
-    fs.mkdir(`/${tmpDir}`, { recursive: true }, (err) => {
+    /*
+    const tmpDir = `${os.tmpdir()}/nrr`
+    //const fs = require('fs')
+    fs.mkdir(`${tmpDir}`, { recursive: true }, (err) => {
         if (err) throw err
     })
+    */
 
     return nextConfig
 }
