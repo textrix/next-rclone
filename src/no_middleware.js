@@ -1,14 +1,25 @@
 //export { default } from 'next-auth/middleware'
 
-//import { isAuthenticated } from "@/utils/Auth";
 import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
+import * as jwt from '@/utils/jwt'
+import { log } from "console";
 
-
-const protectedRoutes = ["/"];
-const loginpath = ["/signin"]
+const protectedRoutes = ["/api/:path*"];
+const loginpath = ["/login", "/signin", "/api/auth/signin", "/api/auth/callback"]
 
 export default function middleware(request) {
+    //if (request.nextUrl.pathname.startsWith('/api/rclone')) {
+    //if (request.nextUrl.pathname.startsWith('/api/rclone')) {
+    if (!loginpath.includes(request.nextUrl.pathname)) {
+        const status = jwt.verifyAuth(request.headers)
+        if (200 != status) {
+            const errmsg = (403 == status) ? 'Forbidden' : (401 == status) ? 'No Authorization' : 'Unknown Error'
+            return NextResponse.json({ error: errmsg }, { status: status })
+        }
+    }
+
+    return NextResponse.next()
+
     if (request.nextUrl.pathname.startsWith('/api/upload')) {
         //console.log(request)
         console.log(request.url)

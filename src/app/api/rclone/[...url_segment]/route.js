@@ -3,13 +3,13 @@ import * as rclone from '@/utils/rclone'
 import * as jwt from '@/utils/jwt'
 
 export async function POST(request, { params }) {
-    const auth_value = request.headers.get('Authorization')
-    const status = jwt.verifyToken(auth_value)
+
+/*    const status = jwt.verifyAuth(request.headers)
 
     if (200 != status) {
         return NextResponse.json({ error: 'No Authorization' }, {status: status})
     }
-
+*/
     const { url_segment } = params
     const api_path = url_segment.join('/')
     const body = await request.json()
