@@ -5,6 +5,7 @@ import * as b2s from '@/utils/byte2string'
 import Header from './Header'
 import DownloadButton from '@/components/DownloadButton'
 import UploadButton from '@/components/UploadButton'
+import UploadArea from '@/components/UploadArea'
 
 export default async function IsNotRoot({ params: url_segment }) {
     const segment = url_segment.map(item => decodeURIComponent(item))
@@ -21,6 +22,8 @@ export default async function IsNotRoot({ params: url_segment }) {
             <Header params={segment} />
 
             <UploadButton params={segment}/>
+
+            <UploadArea params={segment}/>
 
             <ul key='directory list'>
                 {dir_list?.list.filter(item => item.IsDir).map((item, index) => {
