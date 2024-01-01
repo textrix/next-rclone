@@ -28,7 +28,6 @@ export default function UploadArea({ params: segment }) {
     }
 
     useEffect(() => {
-        console.log(uploadedFiles)
         if (uploadedFiles.length == 0) return
 
         Array.from(uploadedFiles).forEach(async (file) => {
@@ -45,7 +44,6 @@ export default function UploadArea({ params: segment }) {
             const updir = encodeURIComponent(file.fullPath?.split('/').slice(0, -1).join('/'))
             const filename = `${encodeURIComponent(file.name)}`
 
-            console.log(remote, updir)
             const response = await axios.post(
                 `/api/upload`,
                 formData,
@@ -58,12 +56,12 @@ export default function UploadArea({ params: segment }) {
                 }
             )    
         })
-
-        setUploadedFiles([])
     }, [uploadedFiles])
 
     const handleDrop = async (event) => {
         event.preventDefault();
+
+        setUploadedFiles([])
 
         const items = event.dataTransfer.items;
         Array.from(items).forEach((item) => {
@@ -86,7 +84,7 @@ export default function UploadArea({ params: segment }) {
         >
             <p>Drag and drop files here</p>
             {uploadedFiles.map((file, index) => (
-                <div key={index}>{file.fullPath}</div>
+                <div key={index}>{index}{file.name}</div>
             ))}
         </div>
     )
